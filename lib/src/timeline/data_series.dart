@@ -1,5 +1,6 @@
 import 'package:animations_package/src/timeline/data_item.dart';
 import 'package:animations_package/src/timeline/plot_type.dart';
+import 'package:flutter/material.dart';
 
 class DataSeries {
   String name;
@@ -8,6 +9,7 @@ class DataSeries {
   PlotType plotType;
   double? minValue;
   double? maxValue;
+  Rect? rect;
 
   DataSeries({
     required this.name,
@@ -16,5 +18,6 @@ class DataSeries {
     required this.plotType,
     this.minValue,
     this.maxValue,
+    this.rect,
   });
 }

@@ -207,6 +207,7 @@ class TimelinePainter extends CustomPainter {
     const y1 = 30.0;
     const y2 = 0.0;
     final rect = Rect.fromLTRB(x1, d + height - y1, x2, d + height + y2);
+    element.rect = rect;
     rectPaint.shader = const LinearGradient(
         colors: [Color(0xff662397), Color(0xffdc6c62)],
         begin: Alignment.centerLeft,

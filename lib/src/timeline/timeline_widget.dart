@@ -4,6 +4,7 @@ import 'package:animations_package/src/timeline/data_series.dart';
 import 'package:animations_package/src/timeline/plot_type.dart';
 import 'package:animations_package/src/timeline/timeline_painter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/gestures/events.dart';
 
 class TimeLineWidget extends StatefulWidget {
   const TimeLineWidget({super.key});
@@ -46,25 +47,54 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
       items: <DataItem>[d3, d4],
       plotType: PlotType.timePeriod,
     );
+
+    for (var d in dataSeries.items) {
+      dataSeries.minValue =
+          d.value ??= 0 < dataSeries.minValue! ? d.value : dataSeries.minValue;
+      dataSeries.maxValue =
+          d.value ??= 0 > dataSeries.maxValue! ? d.value : dataSeries.maxValue;
+    }
+
     dataCard = DataCard(
       name: 'Formação',
       serie: [dataSeries, dataSeries2],
       startDate: DateTime.utc(2022, 7, 1),
       endDate: DateTime.utc(2022, 12, 1),
     );
+
+    DateTime minDate = dataCard.serie.first.items.first.timestamp;
+    DateTime maxDAte = dataCard.serie.first.items.first.timestamp;
+
+    for (var serie in dataCard.serie) {
+      for (var date in dataSeries.items) {
+        if (date.timestamp.isBefore(minDate)) {
+          minDate = date.timestamp;
+        }
+        if (date.timestamp.isAfter(maxDAte)) {
+          maxDAte = date.timestamp;
+        }
+      }
+    }
+
+    dataCard
+      ..startDate = minDate
+      ..endDate = maxDAte;
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onHorizontalDragUpdate: _handleDragUpdate,
-      child: CustomPaint(
-        painter: TimelinePainter(
-          startDate: startDate,
-          endDate: endDate,
-          dataCard: dataCard,
+    return MouseRegion(
+      onHover: onHover,
+      child: GestureDetector(
+        onHorizontalDragUpdate: _handleDragUpdate,
+        child: CustomPaint(
+          painter: TimelinePainter(
+            startDate: startDate,
+            endDate: endDate,
+            dataCard: dataCard,
+          ),
+          child: Container(),
         ),
-        child: Container(),
       ),
     );
   }
@@ -75,5 +105,21 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
       startDate = startDate.add(Duration(days: -dd.toInt()));
       endDate = endDate.add(Duration(days: -dd.toInt()));
     });
+  }
+
+  void onHover(PointerHoverEvent event) {
+    bool inside = false;
+    for (var serie in dataCard.serie) {
+      if (serie.rect != null) {
+        inside = serie.rect?.contains(event.localPosition) ?? false;
+        if (inside) {
+          showDialog(
+            context: context,
+            builder: (context) =>
+                AlertDialog(content: Text('Clicou no ${serie.name}')),
+          );
+        }
+      }
+    }
   }
 }
