@@ -40,12 +40,16 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
       description: 'Curso de Formação Flutter - Proz Educação',
       items: <DataItem>[d1, d2],
       plotType: PlotType.timePeriod,
+      minValue: -double.maxFinite,
+      maxValue: double.maxFinite,
     );
     final dataSeries2 = DataSeries(
       name: 'Código do Futuro',
       description: 'Curso de C#',
       items: <DataItem>[d3, d4],
       plotType: PlotType.timePeriod,
+      minValue: -double.maxFinite,
+      maxValue: double.maxFinite,
     );
 
     for (var d in dataSeries.items) {
