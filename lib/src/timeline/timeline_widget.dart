@@ -4,7 +4,7 @@ import 'package:animations_package/src/timeline/data_series.dart';
 import 'package:animations_package/src/timeline/plot_type.dart';
 import 'package:animations_package/src/timeline/timeline_painter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/gestures/events.dart';
+import 'package:flutter/services.dart';
 
 class TimeLineWidget extends StatefulWidget {
   const TimeLineWidget({super.key});
