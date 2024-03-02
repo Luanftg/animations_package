@@ -1,8 +1,4 @@
-import 'package:animations_package/src/timeline/data_card.dart';
-import 'package:animations_package/src/timeline/data_item.dart';
-import 'package:animations_package/src/timeline/data_series.dart';
-import 'package:animations_package/src/timeline/plot_type.dart';
-import 'package:animations_package/src/timeline/timeline_painter.dart';
+import 'package:animations_package/animations_package.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -63,7 +59,8 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
       name: 'Formação',
       serie: [dataSeries, dataSeries2],
       startDate: DateTime.utc(2022, 7, 1),
-      endDate: DateTime.utc(2022, 12, 1),
+      endDate: endDate,
+      // DateTime.utc(2024, 12, 1),
     );
 
     DateTime minDate = dataCard.serie.first.items.first.timestamp;
@@ -87,17 +84,20 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onHover: onHover,
-      child: GestureDetector(
-        onHorizontalDragUpdate: _handleDragUpdate,
-        child: CustomPaint(
-          painter: TimelinePainter(
-            startDate: startDate,
-            endDate: endDate,
-            dataCard: dataCard,
+    return Scaffold(
+      body: MouseRegion(
+        onHover: onHover,
+        child: GestureDetector(
+          onHorizontalDragUpdate: _handleDragUpdate,
+          onTapUp: handleOnTapUp,
+          child: CustomPaint(
+            painter: TimelinePainter(
+              startDate: startDate,
+              endDate: endDate,
+              dataCard: dataCard,
+            ),
+            child: Container(),
           ),
-          child: Container(),
         ),
       ),
     );
@@ -109,6 +109,22 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
       startDate = startDate.add(Duration(days: -dd.toInt()));
       endDate = endDate.add(Duration(days: -dd.toInt()));
     });
+  }
+
+  void handleOnTapUp(TapUpDetails details) {
+    bool inside = false;
+    for (var serie in dataCard.serie) {
+      if (serie.rect != null) {
+        inside = serie.rect?.contains(details.localPosition) ?? false;
+        if (inside) {
+          showDialog(
+            context: context,
+            builder: (context) =>
+                AlertDialog(content: Text('Clicou no ${serie.name}')),
+          );
+        }
+      }
+    }
   }
 
   void onHover(PointerHoverEvent event) {

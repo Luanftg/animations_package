@@ -1,7 +1,5 @@
 import 'dart:math';
-import 'package:animations_package/src/timeline/data_card.dart';
-import 'package:animations_package/src/timeline/data_series.dart';
-import 'package:animations_package/src/timeline/plot_type.dart';
+import 'package:animations_package/animations_package.dart';
 import 'package:flutter/material.dart';
 
 class TimelinePainter extends CustomPainter {
@@ -150,12 +148,13 @@ class TimelinePainter extends CustomPainter {
     final xStart = aa.inDays * xPerDay;
     final bb = dataCard.endDate.difference(startDate);
     final xFinish = bb.inDays * xPerDay;
-    final rect = Rect.fromLTRB(
+    final rect = Rect.fromLTWH(
       xStart - pad,
       d - pad,
       xFinish - xStart + 2 * pad,
       height + 2 * pad,
     );
+
     final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(10));
     canvas.drawRRect(rrect, border);
 
@@ -195,7 +194,28 @@ class TimelinePainter extends CustomPainter {
   }
 
   void drawLinePlot(Canvas canvas, yOffset, double xPerDay, double height,
-      DataSeries element) {}
+      DataSeries element) {
+    if (element.minValue != null && element.maxValue != null) {
+      final yRange = element.maxValue! - element.minValue!;
+      final yFactor = height / yRange;
+      var path = Path();
+      bool pathStarted = false;
+      for (var di in element.items) {
+        if (di.value != null) {
+          final aa = di.timestamp.difference(startDate);
+          final x = aa.inDays * xPerDay;
+          final y = (di.value! - element.minValue!) * yFactor;
+          if (!pathStarted) {
+            path.moveTo(x, yOffset + height - y);
+            pathStarted = true;
+          }
+          canvas.drawCircle(Offset(x, yOffset + height - y), 3.0, border);
+          path.lineTo(x, yOffset + height - y);
+        }
+      }
+      canvas.drawPath(path, border);
+    }
+  }
 
   double drawTimePeriod(Canvas canvas, double d, double xPerDay, double height,
       DataSeries element) {

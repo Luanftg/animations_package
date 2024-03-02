@@ -16,8 +16,8 @@ class DataSeries {
     required this.description,
     required this.items,
     required this.plotType,
-    this.minValue = -double.maxFinite,
-    this.maxValue = double.maxFinite,
+    this.minValue,
+    this.maxValue,
     this.rect,
   });
 }
