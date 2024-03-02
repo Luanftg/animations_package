@@ -84,8 +84,7 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: MouseRegion(
+    return  MouseRegion(
         onHover: onHover,
         child: GestureDetector(
           onHorizontalDragUpdate: _handleDragUpdate,
@@ -99,8 +98,7 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
             child: Container(),
           ),
         ),
-      ),
-    );
+      );
   }
 
   _handleDragUpdate(DragUpdateDetails details) {
