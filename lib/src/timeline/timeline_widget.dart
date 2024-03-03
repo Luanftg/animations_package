@@ -10,11 +10,14 @@ class TimeLineWidget extends StatefulWidget {
     required this.startDate,
     required this.endDate,
     this.timeLineConfig,
+    this.onHover,
   });
+
   final DataCard dataCard;
   final DateTime startDate;
   final DateTime endDate;
   final TimeLineConfig? timeLineConfig;
+  final Function(PointerHoverEvent event)? onHover;
 
   @override
   State<TimeLineWidget> createState() => _TimeLineWidgetState();
@@ -34,7 +37,7 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onHover: onHover,
+      onHover: widget.onHover ?? onHover,
       child: GestureDetector(
         onHorizontalDragUpdate: _handleDragUpdate,
         onTapUp: handleOnTapUp,
