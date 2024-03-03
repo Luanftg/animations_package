@@ -1,22 +1,49 @@
 import 'dart:math';
 import 'package:animations_package/animations_package.dart';
+import 'package:animations_package/src/timeline/timeline_config.dart';
 import 'package:flutter/material.dart';
 
 class TimelinePainter extends CustomPainter {
   final DateTime startDate;
   final DateTime endDate;
   final DataCard dataCard;
+  TimeLineConfig? timeLineConfig;
 
   TimelinePainter({
     required this.startDate,
     required this.endDate,
     required this.dataCard,
-  });
+    this.timeLineConfig,
+  }) {
+    if (timeLineConfig == null) {
+      timeLineConfig = TimeLineConfig();
+    } else {
+      timeLineConfig = timeLineConfig;
+    }
+    monthStyle = timeLineConfig!.monthStyle;
+    yaerBGTextStyle = timeLineConfig!.yearBGTextStyle;
+    border = Paint()
+      ..color = timeLineConfig!.borderColor
+      ..strokeWidth = timeLineConfig!.borderWidth
+      ..style = PaintingStyle.stroke;
+    newYearBg1 = Paint()
+      ..color = timeLineConfig!.newYearBg1
+      ..style = PaintingStyle.fill;
+    newYearBg2 = Paint()
+      ..color = timeLineConfig!.newYearBg2
+      ..style = PaintingStyle.fill;
+    title1Style = timeLineConfig!.title1Style;
+    title2Style = timeLineConfig!.title2Style;
+  }
 
-  final TextStyle monthStyle = const TextStyle(
-      color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold);
-  final TextStyle yaerBGTextStyle = const TextStyle(
-      color: Colors.white10, fontSize: 400, fontWeight: FontWeight.bold);
+  late final TextStyle monthStyle;
+  late final TextStyle yaerBGTextStyle;
+  late final Paint newYearBg1;
+  late final Paint newYearBg2;
+  late final Paint border;
+  late final TextStyle title1Style;
+  late final TextStyle title2Style;
+
   final monthNames = [
     'JAN',
     'FEV',
@@ -32,26 +59,11 @@ class TimelinePainter extends CustomPainter {
     'DEZ'
   ];
 
-  final newYearBg1 = Paint()
-    ..color = const Color(0xff2e2255)
-    ..style = PaintingStyle.fill;
-  final newYearBg2 = Paint()
-    ..color = const Color(0xff1d1638)
-    ..style = PaintingStyle.fill;
-
-  final border = Paint()
-    ..color = Colors.white
-    ..strokeWidth = 0.5
-    ..style = PaintingStyle.stroke;
-
-  final title1Style = const TextStyle(color: Colors.white54, fontSize: 30);
-  final title2Style = const TextStyle(color: Colors.white38, fontSize: 20);
-
   final rectPaint = Paint();
 
   @override
   void paint(Canvas canvas, Size size) {
-    final blockW = size.width / 12;
+    final blockW = size.width / timeLineConfig!.monthRatio;
     final daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
     final fraction = startDate.day.toDouble() / daysInMonth.toDouble();
     var xStart = -fraction * blockW;
@@ -228,11 +240,7 @@ class TimelinePainter extends CustomPainter {
     const y2 = 0.0;
     final rect = Rect.fromLTRB(x1, d + height - y1, x2, d + height + y2);
     element.rect = rect;
-    rectPaint.shader = const LinearGradient(
-        colors: [Color(0xff662397), Color(0xffdc6c62)],
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
-        stops: [0.5, 1.0]).createShader(rect);
+    rectPaint.shader = timeLineConfig!.serieGradient.createShader(rect);
     canvas.drawRect(rect, rectPaint);
     final tp = measureText(element.name, title2Style);
     final pos = Offset(
