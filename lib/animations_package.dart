@@ -21,3 +21,4 @@ export 'src/timeline/data_series.dart';
 export 'src/timeline/plot_type.dart';
 export 'src/timeline/timeline_painter.dart';
 export 'src/timeline/timeline_widget.dart';
+export 'src/timeline/timeline_config.dart';
