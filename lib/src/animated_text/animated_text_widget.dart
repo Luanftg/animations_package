@@ -52,6 +52,9 @@ class _AnimatedTextWidgetState extends State<AnimatedTextWidget>
 
     widget.statusListener;
     widget.listener;
+
+    //  _textAnimationController.reset();
+    _textAnimationController.forward();
   }
 
   @override
