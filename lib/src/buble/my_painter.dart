@@ -2,14 +2,22 @@ import 'package:animations_package/src/buble/custom_animation_controller.dart';
 import 'package:animations_package/src/buble/my_painter_canvas.dart';
 import 'package:flutter/material.dart';
 
-class MyPainter extends StatefulWidget {
-  const MyPainter({super.key});
+class BubleWidget extends StatefulWidget {
+  const BubleWidget({
+    super.key,
+    this.backgroundColor,
+    this.height,
+    this.width,
+  });
 
+  final Color? backgroundColor;
+  final double? width;
+  final double? height;
   @override
-  State<MyPainter> createState() => _MyPainterState();
+  State<BubleWidget> createState() => _BubleWidgetState();
 }
 
-class _MyPainterState extends State<MyPainter>
+class _BubleWidgetState extends State<BubleWidget>
     with SingleTickerProviderStateMixin {
   late CustomAnimationController animationController;
   // late AnimationController animationController;
@@ -62,9 +70,9 @@ class _MyPainterState extends State<MyPainter>
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 200,
-        height: 500,
-        color: Colors.black87,
+        width: widget.width ?? 200,
+        height: widget.height ?? 500,
+        color: widget.backgroundColor ?? Colors.transparent,
         child: CustomPaint(
           painter: MyPainterCanvas(particles: animationController.particles),
           child: Container(),
