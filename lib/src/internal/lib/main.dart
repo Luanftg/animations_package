@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
         startDate: startDate,
         endDate: endDate,
         timeLineConfig: timeLineConfig,
-        widget: const ListTile(
-          title: Text('Clicou'),
-          leading: Icon(Icons.ads_click),
+        onTap: (DataSeries value) => ListTile(
+          title: Text(value.name),
+          leading: const Icon(Icons.ads_click),
         ),
         onHover: (value) {},
       ),

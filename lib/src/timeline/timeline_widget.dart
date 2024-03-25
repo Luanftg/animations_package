@@ -4,21 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class TimeLineWidget extends StatefulWidget {
-  const TimeLineWidget(
-      {super.key,
-      required this.dataCard,
-      required this.startDate,
-      required this.endDate,
-      this.timeLineConfig,
-      this.onHover,
-      this.widget});
+  const TimeLineWidget({
+    super.key,
+    required this.dataCard,
+    required this.startDate,
+    required this.endDate,
+    this.timeLineConfig,
+    this.onHover,
+    this.onTap,
+  });
 
   final DataCard dataCard;
   final DateTime startDate;
   final DateTime endDate;
   final TimeLineConfig? timeLineConfig;
   final Function(PointerHoverEvent event)? onHover;
-  final Widget? widget;
+  final Widget? Function(DataSeries item)? onTap;
 
   @override
   State<TimeLineWidget> createState() => _TimeLineWidgetState();
@@ -76,8 +77,8 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
         if (inside) {
           showDialog(
             context: context,
-            builder: (context) =>
-                AlertDialog(content: widget.widget ?? Text(serie.name)),
+            builder: (context) => AlertDialog(
+                content: widget.onTap?.call(serie) ?? Text(serie.name)),
           );
         }
       }
@@ -92,8 +93,7 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
         if (inside) {
           showDialog(
             context: context,
-            builder: (context) =>
-                AlertDialog(content: Text('Clicou no ${serie.name}')),
+            builder: (context) => AlertDialog(content: Text(serie.name)),
           );
         }
       }
