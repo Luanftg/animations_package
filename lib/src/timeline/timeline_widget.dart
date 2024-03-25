@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:animations_package/animations_package.dart';
 import 'package:animations_package/src/internal/lib/main.dart';
 import 'package:flutter/material.dart';
@@ -26,14 +28,11 @@ class TimeLineWidget extends StatefulWidget {
 }
 
 class _TimeLineWidgetState extends State<TimeLineWidget> {
-  var startDate = DateTime.utc(2022, 1, 1);
-  var endDate = DateTime.utc(2024, 2, 1);
-
   @override
   void initState() {
+    log('END_DATE: ${widget.dataCard.endDate}');
+    log('START_DATE: ${widget.dataCard.startDate}');
     super.initState();
-    startDate = startDate;
-    endDate = endDate;
   }
 
   @override
@@ -59,9 +58,13 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
   _handleDragUpdate(DragUpdateDetails details) {
     final dd = details.primaryDelta ?? 1;
     final addDays = startDate.add(Duration(days: -dd.toInt()));
+    log('addDAYS: $addDays');
     final endDays = endDate.add(Duration(days: -dd.toInt()));
-    if (addDays.isBefore(dataCard.endDate) &&
-        endDays.isAfter(dataCard.startDate)) {
+    log('endDAYS: $endDays');
+    if (addDays
+            .isBefore(widget.dataCard.endDate.add(const Duration(days: 30))) &&
+        endDays
+            .isAfter(widget.dataCard.startDate.add(const Duration(days: 30)))) {
       setState(() {
         startDate = startDate.add(Duration(days: -dd.toInt()));
         endDate = endDate.add(Duration(days: -dd.toInt()));

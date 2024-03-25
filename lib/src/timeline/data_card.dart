@@ -1,16 +1,13 @@
-
 import '../../animations_package.dart';
 
 class DataCard {
   String name;
   List<DataSeries> serie;
-  DateTime startDate;
-  DateTime endDate;
+  late DateTime startDate;
+  late DateTime endDate;
   DataCard({
     required this.name,
     required this.serie,
-    required this.startDate,
-    required this.endDate,
   }) {
     DateTime minDate = serie.first.items.first.timestamp;
     DateTime maxDAte = serie.first.items.first.timestamp;

@@ -69,8 +69,6 @@ final dataSeries2 = DataSeries(
 final DataCard dataCard = DataCard(
   name: 'Formação',
   serie: [dataSeries, dataSeries2],
-  startDate: DateTime.utc(2022, 7, 1),
-  endDate: DateTime.now(),
 );
 var startDate = DateTime.utc(2022, 1, 1);
 var endDate = DateTime.utc(2024, 2, 1);
