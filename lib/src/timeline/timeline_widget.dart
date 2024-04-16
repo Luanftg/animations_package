@@ -58,9 +58,9 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
   _handleDragUpdate(DragUpdateDetails details) {
     final dd = details.primaryDelta ?? 1;
     final addDays = startDate.add(Duration(days: -dd.toInt()));
-    log('addDAYS: $addDays');
+
     final endDays = endDate.add(Duration(days: -dd.toInt()));
-    log('endDAYS: $endDays');
+
     if (addDays
             .isBefore(widget.dataCard.endDate.add(const Duration(days: 30))) &&
         endDays

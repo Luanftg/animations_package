@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:animations_package/src/timeline/data_type.dart';
 import 'package:animations_package/src/timeline/timeline_widget.dart';
 import 'package:animations_package/src/timeline/data_item.dart';
 import 'package:animations_package/src/timeline/data_card.dart';
@@ -48,6 +49,12 @@ final d3 = DataItem(
 final d4 = DataItem(
   timestamp: DateTime.utc(2023, 2, 20),
 );
+final d5 = DataItem(
+  timestamp: DateTime.utc(2023, 7, 20),
+);
+final d6 = DataItem(
+  timestamp: DateTime.utc(2024, 4, 20),
+);
 
 DataSeries dataSeries = DataSeries(
   name: 'Flutter',
@@ -65,10 +72,19 @@ final dataSeries2 = DataSeries(
   minValue: -double.maxFinite,
   maxValue: double.maxFinite,
 );
+final dataSeries3 = DataSeries(
+  name: 'MVS-Rastreamento',
+  description: 'Aplicativo para Rastreio veícular',
+  items: <DataItem>[d5, d6],
+  plotType: PlotType.timePeriod,
+  minValue: -double.maxFinite,
+  maxValue: double.maxFinite,
+  type: DataType.project,
+);
 
 final DataCard dataCard = DataCard(
   name: 'Formação',
-  serie: [dataSeries, dataSeries2],
+  serie: [dataSeries, dataSeries2, dataSeries3],
 );
 var startDate = DateTime.utc(2022, 1, 1);
 var endDate = DateTime.utc(2024, 2, 1);

@@ -1,4 +1,5 @@
 import 'package:animations_package/src/timeline/data_item.dart';
+import 'package:animations_package/src/timeline/data_type.dart';
 import 'package:animations_package/src/timeline/plot_type.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,7 @@ class DataSeries {
   double? minValue;
   double? maxValue;
   Rect? rect;
+  DataType type;
 
   DataSeries({
     required this.name,
@@ -19,5 +21,6 @@ class DataSeries {
     this.minValue,
     this.maxValue,
     this.rect,
+    this.type = DataType.course,
   });
 }

@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:animations_package/animations_package.dart';
-import 'package:animations_package/src/timeline/timeline_config.dart';
+import 'package:animations_package/src/timeline/data_type.dart';
 import 'package:flutter/material.dart';
 
 class TimelinePainter extends CustomPainter {
@@ -59,6 +59,11 @@ class TimelinePainter extends CustomPainter {
     'DEZ'
   ];
 
+  final outterBorder = Paint()
+    ..color = Colors.grey.shade400
+    ..strokeWidth = 1.5
+    ..style = PaintingStyle.stroke;
+
   final rectPaint = Paint();
 
   @override
@@ -67,11 +72,12 @@ class TimelinePainter extends CustomPainter {
     final daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
     final fraction = startDate.day.toDouble() / daysInMonth.toDouble();
     var xStart = -fraction * blockW;
+    final cardHeight = (size.height / 2) - 80;
 
     drawBackgroundShading(canvas, blockW, size, xStart);
-    drawYearOnBackground(canvas, blockW, size.height / 2, xStart);
+    drawYearOnBackground(canvas, blockW, (size.height / 2) - 50, xStart);
     drawMonth(canvas, size, blockW, xStart);
-    drawCard(canvas, size, 200.0);
+    drawCard(canvas, size, cardHeight);
   }
 
   @override
@@ -99,8 +105,9 @@ class TimelinePainter extends CustomPainter {
     var month = startDate.month;
     final mm1 = (1 - month) * blockW + xStart;
     final mm2 = (1 - month + 12) * blockW + xStart;
-    drawText(canvas, Offset(mm1, d), year.toString(), yaerBGTextStyle);
-    drawText(canvas, Offset(mm2, d), (year + 1).toString(), yaerBGTextStyle);
+    drawText(canvas, Offset(mm1, d - 100), year.toString(), yaerBGTextStyle);
+    drawText(
+        canvas, Offset(mm2, d - 100), (year + 1).toString(), yaerBGTextStyle);
   }
 
   void drawMonth(Canvas canvas, Size size, double blockW, double xStart) {
@@ -144,21 +151,51 @@ class TimelinePainter extends CustomPainter {
     const pad = 10.0;
     var height = 100.0;
 
-    // draw charts
-    for (var element in dataCard.serie) {
-      if (element.plotType == PlotType.line) {
-        drawLinePlot(canvas, d, xPerDay, height, element);
-      }
-      if (element.plotType == PlotType.timePeriod) {
-        final h = drawTimePeriod(canvas, d, xPerDay, height, element);
-        height += (h + pad);
-      }
+    final bool hasProject =
+        dataCard.serie.any((element) => element.type == DataType.project);
+
+    if (hasProject) {
+      final projects = dataCard.serie
+          .where((element) => element.type == DataType.project)
+          .toList();
+      _drawCharts(canvas, height, xPerDay, 0.5 * d, pad, projects);
+
+      DateTime? projectStartDate;
+      DateTime? projectEndDate;
+      (projectStartDate, projectEndDate) = calculateStartAndEndDate(projects);
+
+      final aa = projectStartDate.difference(startDate);
+      final xStart = aa.inDays * xPerDay;
+      final bb = projectEndDate.difference(startDate);
+      final xFinish = bb.inDays * xPerDay;
+      final rect = Rect.fromLTWH(
+        xStart - pad,
+        0.5 * d - pad,
+        xFinish - xStart + 2 * pad,
+        height + 2 * pad,
+      );
+      _drawOuterBorder(canvas, rect);
+      //title
+      const ofs = Offset(5, -40);
+      drawText(canvas, rect.topLeft + ofs, timeLineConfig!.project,
+          timeLineConfig!.projectsTextStyle);
     }
 
+    // draw charts
+    final courses = dataCard.serie
+        .where((element) => element.type == DataType.course)
+        .toList();
+    _drawCharts(canvas, height, xPerDay, d, pad, courses);
+
+    DateTime? courseStartDate;
+    DateTime? courseEndDate;
+
+    (courseStartDate, courseEndDate) = calculateStartAndEndDate(courses);
+
     // draw outer border
-    final aa = dataCard.startDate.difference(startDate);
+    final aa = courseStartDate.difference(startDate);
     final xStart = aa.inDays * xPerDay;
-    final bb = dataCard.endDate.difference(startDate);
+    final bb = courseEndDate.difference(startDate);
     final xFinish = bb.inDays * xPerDay;
     final rect = Rect.fromLTWH(
       xStart - pad,
@@ -167,12 +204,47 @@ class TimelinePainter extends CustomPainter {
       height + 2 * pad,
     );
 
-    final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(10));
-    canvas.drawRRect(rrect, border);
+    // final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(10));
+    // canvas.drawRRect(rrect, border);
+    _drawOuterBorder(canvas, rect);
 
     // draw Title
-    const ofs = Offset(5, 5);
-    drawText(canvas, rect.topLeft + ofs, dataCard.name, title1Style);
+    const ofs = Offset(5, -40);
+    drawText(canvas, rect.topLeft + ofs, dataCard.name,
+        timeLineConfig!.coursesTextStyle);
+
+    //drawMAXOutterBorder
+    final maxHeight = dataCard.serie.length * (height + pad) + pad;
+    final maxStartDate =
+        dataCard.startDate.difference(startDate).inDays * xPerDay;
+    final maxEndDate = dataCard.endDate.difference(startDate).inDays * xPerDay;
+    final leftPadding = maxStartDate - 4 * pad;
+    final topPadding = height;
+    final maxRect = Rect.fromLTWH(
+      leftPadding,
+      topPadding,
+      maxEndDate - maxStartDate + 8 * pad,
+      maxHeight + 2 * height,
+    );
+    _drawOuterBorder(canvas, maxRect, outterBorder: outterBorder);
+  }
+
+  (DateTime startDate, DateTime endDate) calculateStartAndEndDate(
+      List<DataSeries> series) {
+    var startDate;
+    var endDate;
+    for (final project in series) {
+      startDate ??= project.items.first.timestamp;
+      endDate ??= project.items.last.timestamp;
+      if (project.items.first.timestamp.isBefore(startDate)) {
+        startDate = project.items.first.timestamp;
+      }
+      if (project.items.last.timestamp.isAfter(endDate)) {
+        endDate = project.items.last.timestamp;
+      }
+    }
+
+    return (startDate, endDate);
   }
 
   void drawTextVertical(
@@ -182,6 +254,31 @@ class TimelinePainter extends CustomPainter {
     canvas.rotate(-90 * pi / 180);
     drawText(canvas, const Offset(0, 0), monthName, monthStyle);
     canvas.restore();
+  }
+
+  _drawCharts(Canvas canvas, double height, double xPerDay, double d,
+      double pad, List<DataSeries> series) {
+    final cardHeight = series.length * (height + pad) + pad;
+    // draw charts
+    for (var element in series) {
+      if (element.plotType == PlotType.line) {
+        drawLinePlot(canvas, cardHeight, xPerDay, height, element);
+      }
+      if (element.plotType == PlotType.timePeriod) {
+        final h =
+            drawTimePeriod(canvas, cardHeight + pad, xPerDay, height, element);
+        height += (h + pad);
+      }
+    }
+  }
+
+  _drawOuterBorder(Canvas canvas, Rect rect, {Paint? outterBorder}) {
+    // draw outer border
+    final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(10));
+    canvas.drawRRect(
+      rrect,
+      outterBorder ?? border,
+    );
   }
 
   void drawText(
@@ -240,7 +337,10 @@ class TimelinePainter extends CustomPainter {
     const y2 = 0.0;
     final rect = Rect.fromLTRB(x1, d + height - y1, x2, d + height + y2);
     element.rect = rect;
-    rectPaint.shader = timeLineConfig!.serieGradient.createShader(rect);
+    final bool isProject = element.type == DataType.project;
+    rectPaint.shader = !isProject
+        ? timeLineConfig!.serieGradient.createShader(rect)
+        : timeLineConfig!.serieSecondaryGradient.createShader(rect);
     canvas.drawRect(rect, rectPaint);
     final tp = measureText(element.name, title2Style);
     final pos = Offset(

@@ -7,19 +7,22 @@
         {
             "name": "animations_package",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "program": "lib/src/internal/lib/main.dart"
         },
         {
             "name": "animations_package (profile mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "program": "lib/src/internal/lib/main.dart"
         },
         {
             "name": "animations_package (release mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "program": "lib/src/internal/lib/main.dart"
         }
     ]
 }
