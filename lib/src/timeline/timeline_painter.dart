@@ -219,7 +219,7 @@ class TimelinePainter extends CustomPainter {
         dataCard.startDate.difference(startDate).inDays * xPerDay;
     final maxEndDate = dataCard.endDate.difference(startDate).inDays * xPerDay;
     final leftPadding = maxStartDate - 4 * pad;
-    final topPadding = height;
+    final topPadding = height - 6 * pad;
     final maxRect = Rect.fromLTWH(
       leftPadding,
       topPadding,
