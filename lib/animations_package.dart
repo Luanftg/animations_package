@@ -23,3 +23,4 @@ export 'src/timeline/timeline_painter.dart';
 export 'src/timeline/timeline_widget.dart';
 export 'src/timeline/timeline_config.dart';
 export 'src/animated_text/animated_text_widget.dart';
+export 'src/timeline/data_type.dart';
