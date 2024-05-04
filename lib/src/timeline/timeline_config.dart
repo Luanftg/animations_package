@@ -33,7 +33,7 @@ class TimeLineConfig {
     this.monthStyle = const TextStyle(
         color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),
     this.yearBGTextStyle = const TextStyle(
-        color: Colors.white10, fontSize: 400, fontWeight: FontWeight.bold),
+        color: Colors.white10, fontSize: 350, fontWeight: FontWeight.bold),
     this.newYearBg1 = const Color(0xff2e2255),
     this.newYearBg2 = const Color(0xff1d1638),
     this.borderColor = Colors.white,

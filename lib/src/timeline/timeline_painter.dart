@@ -68,14 +68,24 @@ class TimelinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final blockW = size.width / timeLineConfig!.monthRatio;
+    bool isMobile = size.width < 450;
+    bool isTablet = size.width >= 450 && size.width < 800;
+    final blockW = size.width /
+        (isTablet ? 6 : (isMobile ? 3 : timeLineConfig!.monthRatio));
     final daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
     final fraction = startDate.day.toDouble() / daysInMonth.toDouble();
     var xStart = -fraction * blockW;
-    final cardHeight = (size.height / 2) - 80;
+    final cardHeight = (size.height) - 80;
 
     drawBackgroundShading(canvas, blockW, size, xStart);
-    drawYearOnBackground(canvas, blockW, (size.height / 2) - 50, xStart);
+    drawYearOnBackground(
+      canvas,
+      blockW,
+      (size.height / 2) - 50,
+      xStart,
+      isMobile: isMobile,
+      isTablet: isTablet,
+    );
     drawMonth(canvas, size, blockW, xStart);
     drawCard(canvas, size, cardHeight);
   }
@@ -100,14 +110,35 @@ class TimelinePainter extends CustomPainter {
   }
 
   void drawYearOnBackground(
-      Canvas canvas, double blockW, double d, double xStart) {
+    Canvas canvas,
+    double blockW,
+    double d,
+    double xStart, {
+    bool isMobile = false,
+    bool isTablet = false,
+  }) {
     var year = startDate.year;
     var month = startDate.month;
     final mm1 = (1 - month) * blockW + xStart;
     final mm2 = (1 - month + 12) * blockW + xStart;
-    drawText(canvas, Offset(mm1, d - 100), year.toString(), yaerBGTextStyle);
     drawText(
-        canvas, Offset(mm2, d - 100), (year + 1).toString(), yaerBGTextStyle);
+        canvas,
+        Offset(mm1, d - 100),
+        year.toString(),
+        isTablet
+            ? monthStyle.copyWith(fontSize: 200)
+            : isMobile
+                ? monthStyle.copyWith(fontSize: 180)
+                : yaerBGTextStyle);
+    drawText(
+        canvas,
+        Offset(mm2, d - 100),
+        (year + 1).toString(),
+        isTablet
+            ? monthStyle.copyWith(fontSize: 200)
+            : isMobile
+                ? monthStyle.copyWith(fontSize: 180)
+                : yaerBGTextStyle);
   }
 
   void drawMonth(Canvas canvas, Size size, double blockW, double xStart) {
@@ -301,7 +332,8 @@ class TimelinePainter extends CustomPainter {
     paintText(canvas, offset, tp);
   }
 
-  TextPainter measureText(String monthName, TextStyle monthStyle) {
+  TextPainter measureText(String monthName, TextStyle monthStyle,
+      {bool isMobile = true}) {
     final ts = TextSpan(text: monthName, style: monthStyle);
     final tp = TextPainter(
       text: ts,
