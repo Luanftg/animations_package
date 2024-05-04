@@ -91,4 +91,5 @@ var startDate = DateTime.utc(2022, 1, 1);
 var endDate = DateTime.utc(2024, 2, 1);
 TimeLineConfig timeLineConfig = TimeLineConfig()
   ..newYearBg1 = Colors.amber
-  ..newYearBg2 = Colors.black;
+  ..newYearBg2 = Colors.black
+  ..showMaxBorder = false;

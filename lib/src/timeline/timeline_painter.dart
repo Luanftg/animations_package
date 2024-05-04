@@ -174,11 +174,19 @@ class TimelinePainter extends CustomPainter {
         xFinish - xStart + 2 * pad,
         height + 2 * pad,
       );
-      _drawOuterBorder(canvas, rect);
+      timeLineConfig?.showBorders ?? false
+          ? _drawOuterBorder(canvas, rect)
+          : null;
       //title
       const ofs = Offset(5, -40);
-      drawText(canvas, rect.topLeft + ofs, timeLineConfig!.project,
-          timeLineConfig!.projectsTextStyle);
+      timeLineConfig?.showBorders ?? false
+          ? (
+              canvas,
+              rect.topLeft + ofs,
+              timeLineConfig!.project,
+              timeLineConfig!.projectsTextStyle
+            )
+          : null;
     }
 
     // draw charts
@@ -206,12 +214,16 @@ class TimelinePainter extends CustomPainter {
 
     // final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(10));
     // canvas.drawRRect(rrect, border);
-    _drawOuterBorder(canvas, rect);
+    timeLineConfig?.showBorders ?? false
+        ? _drawOuterBorder(canvas, rect)
+        : null;
 
     // draw Title
     const ofs = Offset(5, -40);
-    drawText(canvas, rect.topLeft + ofs, dataCard.name,
-        timeLineConfig!.coursesTextStyle);
+    timeLineConfig?.showMaxBorder ?? false
+        ? drawText(canvas, rect.topLeft + ofs, dataCard.name,
+            timeLineConfig!.coursesTextStyle)
+        : null;
 
     //drawMAXOutterBorder
     final maxHeight = dataCard.serie.length * (height + pad) + pad;
@@ -226,7 +238,9 @@ class TimelinePainter extends CustomPainter {
       maxEndDate - maxStartDate + 8 * pad,
       maxHeight + 2 * height,
     );
-    _drawOuterBorder(canvas, maxRect, outterBorder: outterBorder);
+    timeLineConfig?.showMaxBorder ?? false
+        ? _drawOuterBorder(canvas, maxRect, outterBorder: outterBorder)
+        : null;
   }
 
   (DateTime startDate, DateTime endDate) calculateStartAndEndDate(

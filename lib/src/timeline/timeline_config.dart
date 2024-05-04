@@ -18,8 +18,12 @@ class TimeLineConfig {
   int monthRatio;
   LinearGradient serieGradient;
   LinearGradient serieSecondaryGradient;
+  bool showBorders;
+  bool showMaxBorder;
 
   TimeLineConfig({
+    this.showMaxBorder = true,
+    this.showBorders = false,
     this.project = 'Projetos',
     this.course = 'Formação',
     this.projectsTextStyle = const TextStyle(
