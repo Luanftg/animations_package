@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:animations_package/animations_package.dart';
 import 'package:animations_package/src/internal/lib/main.dart';
 import 'package:flutter/material.dart';
@@ -29,16 +27,9 @@ class TimeLineWidget extends StatefulWidget {
 
 class _TimeLineWidgetState extends State<TimeLineWidget> {
   @override
-  void initState() {
-    log('END_DATE: ${widget.dataCard.endDate}');
-    log('START_DATE: ${widget.dataCard.startDate}');
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onHover: widget.onHover ?? onHover,
+      onHover: widget.onHover,
       child: GestureDetector(
         onHorizontalDragUpdate: _handleDragUpdate,
         onTapUp: handleOnTapUp,
