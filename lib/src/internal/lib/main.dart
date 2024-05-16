@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           title: Text(value.name),
           leading: const Icon(Icons.ads_click),
         ),
-        onHover: (value) {},
+        // onHover: (value) {},
       ),
     );
   }

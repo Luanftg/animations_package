@@ -32,7 +32,7 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
       onHover: widget.onHover,
       child: GestureDetector(
         onHorizontalDragUpdate: _handleDragUpdate,
-        onTapUp: handleOnTapUp,
+        // onTapUp: handleOnTapUp,
         child: CustomPaint(
           painter: TimelinePainter(
             startDate: startDate,
