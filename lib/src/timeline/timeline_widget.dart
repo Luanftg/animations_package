@@ -12,6 +12,7 @@ class TimeLineWidget extends StatefulWidget {
     this.timeLineConfig,
     this.onHover,
     this.onTap,
+    this.child,
   });
 
   final DataCard dataCard;
@@ -20,6 +21,7 @@ class TimeLineWidget extends StatefulWidget {
   final TimeLineConfig? timeLineConfig;
   final Function(PointerHoverEvent event)? onHover;
   final Widget? Function(DataSeries item)? onTap;
+  final Widget? child;
 
   @override
   State<TimeLineWidget> createState() => _TimeLineWidgetState();
@@ -40,7 +42,7 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
             dataCard: widget.dataCard,
             timeLineConfig: widget.timeLineConfig,
           ),
-          child: Container(),
+          child: widget.child ?? Container(),
         ),
       ),
     );

@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:animations_package/animations_package.dart';
-import 'package:animations_package/src/timeline/data_type.dart';
 import 'package:flutter/material.dart';
 
 class TimelinePainter extends CustomPainter {
