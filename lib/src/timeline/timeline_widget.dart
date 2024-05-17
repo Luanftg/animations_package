@@ -7,8 +7,8 @@ class TimeLineWidget extends StatefulWidget {
   const TimeLineWidget({
     super.key,
     required this.dataCard,
-    required this.startDate,
-    required this.endDate,
+    required DateTime startDate,
+    required DateTime endDate,
     this.timeLineConfig,
     this.onHover,
     this.onTap,
@@ -16,8 +16,6 @@ class TimeLineWidget extends StatefulWidget {
   });
 
   final DataCard dataCard;
-  final DateTime startDate;
-  final DateTime endDate;
   final TimeLineConfig? timeLineConfig;
   final Function(PointerHoverEvent event)? onHover;
   final Widget? Function(DataSeries item)? onTap;
@@ -28,6 +26,16 @@ class TimeLineWidget extends StatefulWidget {
 }
 
 class _TimeLineWidgetState extends State<TimeLineWidget> {
+  late DateTime _startDate;
+  late DateTime _endDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _startDate = startDate;
+    _endDate = endDate;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
@@ -37,8 +45,8 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
         onTapUp: handleOnTapUp,
         child: CustomPaint(
           painter: TimelinePainter(
-            startDate: widget.startDate,
-            endDate: widget.endDate,
+            startDate: _startDate,
+            endDate: _endDate,
             dataCard: widget.dataCard,
             timeLineConfig: widget.timeLineConfig,
           ),
@@ -50,17 +58,17 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
 
   _handleDragUpdate(DragUpdateDetails details) {
     final dd = details.primaryDelta ?? 1;
-    final addDays = startDate.add(Duration(days: -dd.toInt()));
+    final addDays = _startDate.add(Duration(days: -dd.toInt()));
 
-    final endDays = endDate.add(Duration(days: -dd.toInt()));
+    final endDays = _endDate.add(Duration(days: -dd.toInt()));
 
     if (addDays
             .isBefore(widget.dataCard.endDate.add(const Duration(days: 30))) &&
         endDays
             .isAfter(widget.dataCard.startDate.add(const Duration(days: 30)))) {
       setState(() {
-        startDate = startDate.add(Duration(days: -dd.toInt()));
-        endDate = endDate.add(Duration(days: -dd.toInt()));
+        _startDate = _startDate.add(Duration(days: -dd.toInt()));
+        _endDate = _endDate.add(Duration(days: -dd.toInt()));
       });
     }
   }
