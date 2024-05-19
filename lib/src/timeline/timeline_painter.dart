@@ -86,7 +86,7 @@ class TimelinePainter extends CustomPainter {
       isTablet: isTablet,
     );
     drawMonth(canvas, size, blockW, xStart);
-    drawCard(canvas, size, cardHeight);
+    drawCard(canvas, size, cardHeight, isMobile, isTablet);
   }
 
   @override
@@ -176,8 +176,14 @@ class TimelinePainter extends CustomPainter {
     }
   }
 
-  void drawCard(Canvas canvas, Size size, double d) {
-    final xPerDay = size.width / 365;
+  void drawCard(
+      Canvas canvas, Size size, double d, bool isMobile, bool isTablet) {
+    final yearRatio = isTablet
+        ? (365 / 6)
+        : isMobile
+            ? (365 / 3)
+            : 365;
+    final xPerDay = size.width / yearRatio;
     const pad = 10.0;
     var height = 100.0;
 
