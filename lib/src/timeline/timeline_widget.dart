@@ -38,20 +38,17 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onHover: widget.onHover,
-      child: GestureDetector(
-        onHorizontalDragUpdate: _handleDragUpdate,
-        onTapUp: handleOnTapUp,
-        child: CustomPaint(
-          painter: TimelinePainter(
-            startDate: _startDate,
-            endDate: _endDate,
-            dataCard: widget.dataCard,
-            timeLineConfig: widget.timeLineConfig,
-          ),
-          child: widget.child ?? Container(),
+    return GestureDetector(
+      onHorizontalDragUpdate: _handleDragUpdate,
+      onTapUp: handleOnTapUp,
+      child: CustomPaint(
+        painter: TimelinePainter(
+          startDate: _startDate,
+          endDate: _endDate,
+          dataCard: widget.dataCard,
+          timeLineConfig: widget.timeLineConfig,
         ),
+        child: widget.child ?? Container(),
       ),
     );
   }
